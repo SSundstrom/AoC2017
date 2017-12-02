@@ -1,14 +1,25 @@
 module Parsers where
 import Data.Char
+import Network.Curl
+import Data.Maybe
+import Text.Regex
 
-intsByRowWord :: ([[Int]] -> Int) -> FilePath -> IO ()
-intsByRowWord f p = do
-    c <- readFile p
-    let parsedString = map words $ lines c
+nums = mkRegex "[0-9]+"
+
+getInput :: Integer -> IO String
+getInput day = do
+    cookie <- readFile ".cookie"
+    (cc, s) <- curlGetString (concat ["http://adventofcode.com/2017/day/", show day, "/input"]) [CurlCookie cookie]
+    return s
+
+intsByRowWord :: Integer -> IO [[Int]]
+intsByRowWord day = do
+    input <- getInput day
+    let parsedString = map words $ lines input
     let parsedInt = map (map (\x -> read x ::Int)) parsedString
-    print $ f parsedInt
+    return parsedInt
 
-intsFromString :: ([Int] -> Int) -> FilePath -> IO ()
-intsFromString f p = do
-    c <- readFile p
-    print $ f $ map digitToInt c
+intsFromString :: Integer -> IO [Int]
+intsFromString day = do
+    c <- getInput day
+    return $ map digitToInt $ filter (isJust . matchRegex nums . show ) c

@@ -4,16 +4,27 @@ import Data.List
 
 -- Less pleb solution
 
+pt1 :: IO ()
+pt1 = do
+    input <- intsByRowWord 2
+    print $ minmaxSum input
+
 minmaxSum :: [[Int]] -> Int
 minmaxSum l = sum $ map (\x -> maximum x - minimum x) l
+
+
+pt2 :: IO ()
+pt2 = do
+    input <- intsByRowWord 2
+    print $ dividableSum input
 
 dividableSum :: [[Int]] -> Int
 dividableSum l = sum $ map (divisible . sortBy (flip compare)) l
 
 divisible :: [Int] -> Int
 divisible [] = 0
-divisible (x:xs) = divisible xs + (sum $ map (\y -> if rem y x == 0 then div y x else 0) xs)
-
+divisible (x:xs) = divisible xs + (sum (map dividable xs))
+    where dividable y = if rem x y == 0 then div x y else 0
 
  -- ***** Pleb solution
 
