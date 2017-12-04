@@ -19,6 +19,11 @@ intsByRowWord day = do
     let parsedInt = map (map (\x -> read x ::Int)) parsedString
     return parsedInt
 
+linesWords :: Integer -> IO [[String]]
+linesWords day = do
+    input <- getInput day
+    return $ map words (lines input)
+
 intsFromString :: Integer -> IO [Int]
 intsFromString day = do
     c <- getInput day
