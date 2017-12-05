@@ -1,24 +1,81 @@
 import Parsers
+import System.Environment
+import Data.Time
+import Data.List
+
+valid :: [String] -> Int
+valid [] = 1
+valid (x:xs) = if (not (elem x xs) && 1 == valid xs) then 1 else 0
+
+pt1and2 :: IO ()
+pt1and2 = do 
+    ms <- linesWords 4
+    start' <- getCurrentTime
+    let ans = sum $ map (valid) ms
+    end' <- getCurrentTime
+    print $ show ans
+    print $ diffUTCTime end' start'
+    start <- getCurrentTime
+    let ans = sum $ map valid (map (map sort) ms)
+    end <- getCurrentTime
+    print $ show ans
+    print $ diffUTCTime end start
+
+
+    -- **
 
 pt1 :: IO ()
 pt1 = do
     ms <- linesWords 4
     print $ show $ sum $ map (valid) ms
 
-valid :: [String] -> Int
-valid [] = 1
-valid (x:xs) = if (not (elem x xs) && 1 == valid xs) then 1 else 0
-
-
 pt2 :: IO ()
 pt2 = do
     ms <- linesWords 4
-    print $ show $ sum $ map (anaValid) ms
+    start <- getCurrentTime
+    let ans = sum $ map (valid) (map (map sort) ms)
+    stop <- getCurrentTime
+    print $ show ans
+    print $ diffUTCTime stop start
 
-test = ["abcde","xyz","ecdab"] --Not vaild
-test2 = [ "iiii", "oiii", "ooii", "oooi", "oooo"] --Valid
-test3 = ["oiii", "ioii", "iioi", "iiio"] -- Not Valid
-test4 = ["a", "ab" ,"abc" ,"abd" ,"abf" ,"abj"] --Valid
+pt2' :: IO ()
+pt2' = do
+    ms <- linesWords 4
+    start <- getCurrentTime
+    let ans = sum $ map (anaValid) (ms)
+    stop <- getCurrentTime
+    print $ show ans
+    print $ diffUTCTime stop start
+
+pt1and2 :: IO ()
+pt1and2 = do 
+    
+    start' <- getCurrentTime
+    ms <- linesWords 4
+    end' <- getCurrentTime
+    print $ diffUTCTime end' start'
+    
+    start' <- getCurrentTime
+    let ans = sum $ map (valid) ms
+    end' <- getCurrentTime
+    print $ show ans
+    print $ diffUTCTime end' start'
+    
+    start <- getCurrentTime
+    let ans = sum $ map (anaValid) ms
+    end <- getCurrentTime
+    print $ show ans
+    print $ diffUTCTime end start
+
+
+    start <- getCurrentTime
+    let ans = sum $ map valid (map (map sort) ms)
+    end <- getCurrentTime
+    print $ show ans
+    print $ diffUTCTime end start
+
+
+    
 
 anaValid :: [String] -> Int
 anaValid [] = 1

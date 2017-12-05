@@ -1,4 +1,7 @@
 -- Varje varv innehåller x * y siffor. med x*x som värdet nere till höger och (x-1)*(x-1)+1 rakt höger.
+import Data.Time
+import System.Environment
+
 
 findSteps :: Int -> Int
 findSteps x = div lap 2 + distanceToMiddle x lap
@@ -25,19 +28,23 @@ a = make1Bigger [[1]]
 
 pt2 :: IO ()
 pt2 = do
-    val <- readLn
-    buildUntil val (2, 1) (make1Bigger [[1]])
+    let val = 277678
+    start <- getCurrentTime
+    let ans = buildUntil val (2, 1) (make1Bigger [[1]])
+    end <- getCurrentTime
+    print $ show ans 
+    print $ diffUTCTime end start    
     -- putStrLn $ show res
 
-buildUntil :: Int -> Pos -> [[Int]] -> IO ()
+buildUntil :: Int -> Pos -> [[Int]] -> Int
 buildUntil v p m
-    | v < nextV = putStrLn $ show $ nextV
+    | v < nextV = nextV
     | p == (size+1, size) = buildUntil v (x+1, y) ((make1Bigger m) !!= ((x+1,y+1), nextV))
     | y == size = buildUntil v (x+1, y) (m !!= (p, nextV))
     | x == 0 = buildUntil v (x, y+1) (m !!= (p, nextV))
     | y == 0 = buildUntil v (x-1, y) (m !!= (p, nextV))
     | x == size = buildUntil v (x, y-1) (m !!= (p, nextV))
-    | otherwise = putStrLn $ show $ m
+    | otherwise = -1
     where 
         size = (length m -1)
         (x,y) = p
