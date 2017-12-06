@@ -47,7 +47,7 @@ intsFromString day = do
 intsByWord :: Integer -> IO [Int]
 intsByWord day = do
     c <- getInput day
-    let parsedString = lines c
+    let parsedString = words c
     let parsedInt = map strToInt parsedString
     return parsedInt
 
