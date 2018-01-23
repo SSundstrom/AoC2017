@@ -15,11 +15,11 @@ findLap' x y = if x > (y^2) then findLap' x (y+2) else (y)
 
 
 distanceToMiddle :: Int -> Int -> Int
-distanceToMiddle x lap = abs(p - (div lap 2))
+distanceToMiddle x lap = abs(p - div lap 2)
     where p = findOffset x lap
 
 findOffset :: Int -> Int -> Int
-findOffset x lap = rem (rem x (((lap-2)^2))) (lap-1)
+findOffset x lap = rem (rem x ((lap - 2) ^ 2)) (lap-1)
 
 type Pos = (Int, Int)
 

@@ -6,8 +6,10 @@ import System.CPUTime
 import Text.Printf
 import Text.Regex
 import Control.Parallel
+-- import Data.String.Utils
 
 nums = mkRegex "[0-9]+"
+nums' = mkRegex "([0-9]+)"
 
 getInput :: Integer -> IO String
 getInput day = do
@@ -23,8 +25,8 @@ timed f = do
     start <- getCPUTime
     let end' = pseq f getCPUTime
     end <- end'
-    let diff = (fromIntegral (end - start)) / (10^12)
-    print $ "Answer = " ++ show f
+    let diff = fromIntegral (end - start) / (10 ^ 12)
+    putStrLn $ "Answer = " ++ show f
     printf "Computation time: %0.3f ms\n" ((diff :: Double) * 1000)
 
 intsByRowWord :: Integer -> IO [[Int]]
@@ -42,7 +44,10 @@ linesWords day = do
 intsFromString :: Integer -> IO [Int]
 intsFromString day = do
     c <- getInput day
-    return $ map digitToInt $ filter (isJust . matchRegex nums . show ) c
+    return $ map digitToInt $ filter (isJust . matchRegex nums . show) c
+
+cleanInt :: String -> Maybe Int
+cleanInt = fmap (strToInt . head) . matchRegex nums'
 
 intsByWord :: Integer -> IO [Int]
 intsByWord day = do
@@ -51,5 +56,25 @@ intsByWord day = do
     let parsedInt = map strToInt parsedString
     return parsedInt
 
-readNegative :: String -> Int
-readNegative x = read x ::Int
+intsCSV :: Integer -> IO [Int]
+intsCSV day = do
+    s <- getInput day
+    let rs = s -- replace "," " " s
+    return $ map strToInt $ words rs
+
+getAllInputs :: Integer -> IO()
+getAllInputs 25 = writeInputToFile 25
+getAllInputs day = do
+    writeInputToFile day
+    getAllInputs $ day+1
+
+writeInputToFile :: Integer -> IO()
+writeInputToFile day = do 
+    input <- getInput day
+    let path = "inputs/day" ++ show day
+    writeFile path input
+
+inputAsAscii :: Integer -> IO [Int]
+inputAsAscii day = do
+    input <- getInput day
+    return $ map ord . init $ input
